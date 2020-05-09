@@ -249,6 +249,32 @@ module FakeBraintree
       end
     end
 
+    # Braintree::Transaction.search
+    post '/merchants/:merchant_id/transactions/advanced_search_ids' do
+      transaction_ids = hash_from_request_body_with_key("search")["ids"]
+      gzipped_response(
+        200,
+        {
+          page_size: 50,
+          ids: transaction_ids,
+        }.to_xml(root: 'search_results')
+      )
+    end
+
+    # Used internally by the search method above ^
+    post '/merchants/:merchant_id/transactions/advanced_search' do
+      transaction_ids = hash_from_request_body_with_key("search")["ids"]
+      transactions = FakeBraintree.registry.
+        transactions.
+        values_at(*transaction_ids).
+        compact
+
+      gzipped_response(
+        200,
+        {transaction: transactions}.to_xml(root: 'credit_card_transactions')
+      )
+    end
+
     # Braintree::Transaction.refund
     post '/merchants/:merchant_id/transactions/:transaction_id/refund' do
       transaction          = hash_from_request_body_with_key('transaction')

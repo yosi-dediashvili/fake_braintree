@@ -138,6 +138,51 @@ describe FakeBraintree::SinatraApp do
 end
 
 describe FakeBraintree::SinatraApp do
+  context 'Braintree::Transaction.search' do
+    it 'can find a created sale' do
+      id = create_transaction(10.00).id
+      result = Braintree::Transaction.search do |search|
+        search.ids.in [id]
+      end
+      expect(result.first.amount).to eq 10.00
+    end
+
+    it 'can find multiple transactions' do
+      ids = [
+        create_transaction(10.00).id,
+        create_transaction(11.00).id,
+        create_transaction(12.00).id
+      ]
+
+      result = Braintree::Transaction.search do |search|
+        search.ids.in ids
+      end
+      expect(result.map(&:amount)).to eq([10, 11, 12])
+    end
+
+    it 'accepts ids that cannot be found along with ones that can be' do
+      ids = [
+        create_transaction(10.00).id,
+        create_transaction(11.00).id,
+        create_transaction(12.00).id
+      ]
+
+      result = Braintree::Transaction.search do |search|
+        search.ids.in [ids[0], 'non-existing', ids[2], 'weird-id']
+      end
+      expect(result.map(&:amount)).to eq([10, 12])
+    end
+
+    def create_transaction(amount = 10.00)
+      Braintree::Transaction.sale(
+        payment_method_token: cc_token,
+        amount: amount
+      ).transaction
+    end
+  end
+end
+
+describe FakeBraintree::SinatraApp do
   context "Braintree::Transaction.submit_for_settlement" do
     it "should be able to mark transaction as completed" do
       id = create_transaction.id
