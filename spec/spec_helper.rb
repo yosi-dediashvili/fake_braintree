@@ -4,7 +4,7 @@ Bundler.require
 require 'fake_braintree'
 require 'timecop'
 require 'dummy/checkout_app'
-require 'capybara-webkit'
+# require 'capybara-webkit'
 
 FakeBraintree.activate!
 

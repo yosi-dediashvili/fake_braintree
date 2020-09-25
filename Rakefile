@@ -3,7 +3,7 @@ require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'net/http'
 require 'capybara'
-require 'capybara-webkit'
+# require 'capybara-webkit'
 require 'yaml'
 
 RSpec::Core::RakeTask.new(:spec)

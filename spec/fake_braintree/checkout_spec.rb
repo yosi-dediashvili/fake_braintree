@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'capybara/rspec'
 
-feature 'checkout', js: true do
+xfeature 'checkout', js: true do
   scenario 'advanced integration' do
     visit('/advanced_checkout')
 

@@ -144,6 +144,8 @@ module FakeBraintree
       else
         []
       end
+    rescue => ex
+      []
     end
 
     def credit_card_expiration_month

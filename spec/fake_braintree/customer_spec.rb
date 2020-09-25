@@ -54,6 +54,11 @@ describe 'Braintree::Customer.create' do
     expect(result).to be_success
   end
 
+  it 'can handle a credit card with just a token' do
+    result = Braintree::Customer.create(credit_card: {token: 'test-token'})
+    expect(result).to be_success
+  end
+
   it 'creates a credit card from payment method nonce in credit card hash' do
     nonce = FakeBraintree::PaymentMethod.tokenize_card({
       number: TEST_CC_NUMBER,
